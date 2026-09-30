@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.25)
+project(search-consumer LANGUAGES CXX)
+find_package(HolonightSearch CONFIG REQUIRED)
+add_executable(search-consumer main.cpp)
+target_link_libraries(search-consumer PRIVATE HolonightSearch::Search)

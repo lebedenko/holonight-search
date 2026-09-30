@@ -1,0 +1,7 @@
+add_executable(holonight_search_tests index_test.cpp)
+target_link_libraries(holonight_search_tests PRIVATE HolonightSearch::Search GTest::gtest_main)
+include(GoogleTest)
+gtest_discover_tests(holonight_search_tests)
+
+add_executable(holonight_search_benchmark benchmark.cpp)
+target_link_libraries(holonight_search_benchmark PRIVATE HolonightSearch::Search)
