@@ -1,0 +1,11 @@
+{
+  "module": "holonight-search",
+  "cpp": true,
+  "qml": false,
+  "languages": [
+    "cpp"
+  ],
+  "dependencies": [],
+  "qml_modules": [],
+  "wayland": false
+}

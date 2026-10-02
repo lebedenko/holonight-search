@@ -13,3 +13,8 @@ auto hits = index.search("lambda", {.limit = 80, .profile = HolonightSearch::Pro
 Build with CMake, install to a prefix, then use `find_package(HolonightSearch CONFIG REQUIRED)` and link `HolonightSearch::Search`. The current syntax is fuzzy matching within whitespace-separated AND terms, with smart case. Other fzf operators are deferred.
 
 `Index::append` publishes immutable batches while a source scans; `replace` swaps a complete source snapshot and `remove` drops it. IDs must be unique within a source. `Options::source` limits a query to one source, which can represent Files' directory or file kind. Field weights and record boosts are caller supplied; the path profile adds a filename preference when a field is named `name`. A cancelled query returns no results.
+
+## Standalone developer tooling
+
+See [tooling/README.md](tooling/README.md) for presets, local dependency overrides, editor refresh,
+`task tooling:doctor`, and the independent Serena project.
