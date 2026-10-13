@@ -1,0 +1,266 @@
+{
+  "verification_date": "2026-10-13",
+  "audit_baseline": "26067775e2eac3d9a779b3114dfbddc96834c7de",
+  "implementation_baseline": "993929cc717f3beaf99c60e01441dc3e86dfe7cf",
+  "ready_checkpoint": "d5fb7f5",
+  "run": "build/ci/20261013T134825Z-tnsa2kj6",
+  "report": {
+    "revision": "993929cc717f3beaf99c60e01441dc3e86dfe7cf",
+    "status": " M .github/workflows/ci.yml\u0000 M CMakeLists.txt\u0000 M CMakePresets.json\u0000 M README.md\u0000 M Taskfile.yml\u0000 M include/holonight/search/index.h\u0000 M scripts/ci/images.json\u0000 M scripts/ci/lane.sh\u0000 D scripts/ci/prepare-tools.py\u0000 M scripts/ci/run.py\u0000 M scripts/ci/test_launcher.py\u0000 M src/index.cpp\u0000 M tests/benchmark.cpp\u0000 M tests/index_test.cpp\u0000 M tests/package-consumer/main.cpp\u0000 M tooling/README.md\u0000 M tooling/VERSION\u0000 M tooling/module.json\u0000 M tooling/workflow.py\u0000?? scripts/ci/test_dependencies.py\u0000?? tooling/dependencies.cmake\u0000?? tooling/external-packages.json\u0000?? tooling/external.py\u0000?? tooling/providers.cmake\u0000",
+    "platform": "linux/amd64",
+    "lanes": {
+      "build-test": {
+        "image": "ghcr.io/lebedenko/holonight-deps@sha256:37ca051c39d1688d6413c47d94b8c0f221152dac6981ec67d155f2c43ea17b40",
+        "exit_code": 0
+      },
+      "benchmark": {
+        "image": "ghcr.io/lebedenko/holonight-deps@sha256:37ca051c39d1688d6413c47d94b8c0f221152dac6981ec67d155f2c43ea17b40",
+        "exit_code": 0
+      },
+      "release": {
+        "image": "ghcr.io/lebedenko/holonight-deps@sha256:37ca051c39d1688d6413c47d94b8c0f221152dac6981ec67d155f2c43ea17b40",
+        "exit_code": 0
+      },
+      "static-checks": {
+        "image": "ghcr.io/lebedenko/holonight-deps@sha256:37ca051c39d1688d6413c47d94b8c0f221152dac6981ec67d155f2c43ea17b40",
+        "exit_code": 0
+      },
+      "licensing": {
+        "image": "docker.io/fsfe/reuse@sha256:85462a75c0f8efda09ddd190b92816b70e7662577c8427429e11e1b9f25a992e",
+        "exit_code": 0
+      }
+    },
+    "dirty": true,
+    "runtime": "Docker version 29.9.0, build f415da838b",
+    "preparation_identity": {
+      "images": {
+        "build": "ghcr.io/lebedenko/holonight-deps@sha256:37ca051c39d1688d6413c47d94b8c0f221152dac6981ec67d155f2c43ea17b40",
+        "licensing": "docker.io/fsfe/reuse@sha256:85462a75c0f8efda09ddd190b92816b70e7662577c8427429e11e1b9f25a992e"
+      },
+      "platform": "linux/amd64",
+      "inputs": {
+        "tooling/VERSION": "c28fcca53637bc88e124af1725df13cb98c69dedefd62fb3cdbe1cdb6b760624",
+        "tooling/module.json": "1f56568298cfe10781b7f33d2711b47c373a202e70fc035869b4b3dadfae41d6",
+        "tooling/dependencies.cmake": "853f6e856c455657a9bf56fc111c29f68f458d6ecc674dabc8b015698b0c9b61",
+        "tooling/providers.cmake": "5d6e7aae9f7f6874d9fa3cf5efca17cab8c3df88ea3b312633ece6341b592876",
+        "tooling/external.py": "2e87dc012d7cdda7235d5ea2e311a2a49272ff82eac5cf3ccec7841ec610df27",
+        "tooling/workflow.py": "6c9d0a80396e61072509437cd39168caf11ca31c8abd8259f50ce2c55434837e",
+        "tooling/external-packages.json": "fbe02f85a17db3583b02fb48659ccfb54e77b0480f76eb23c4a425353cc350a3",
+        "CMakeLists.txt": "89253743bff134275683faec636a0e220da00a14e2ee2719a78330b4e0ed0bed",
+        "CMakePresets.json": "35b9f47c5182dda1b971e83227e4697eaf4b4ecde42717cf6d3d50a6101fb662",
+        "scripts/ci/lane.sh": "937c9b2ec369068d2dcf233a2ccb7d3d588f573385110fdcffe91fc9525b353c",
+        "scripts/ci/run.py": "9073c491021f71c391a42cd2391a23e35109e53e727e0058fc332853e48e4b92"
+      }
+    },
+    "untracked_inputs": [
+      "scripts/ci/test_dependencies.py",
+      "tooling/dependencies.cmake",
+      "tooling/external-packages.json",
+      "tooling/external.py",
+      "tooling/providers.cmake"
+    ]
+  },
+  "log_sha256": {
+    "benchmark.log": "84aded4b005e30f815bdba9a6eacb176552270f06a3c6ce81a7d9e2c7be6e34c",
+    "build-test.log": "6091a15f5626a31ddb4e2784ebfd98b91f2ce81d8f7b1e8046de9591cc08f8d2",
+    "licensing.log": "58d865b23de76d110eb2e6cc2c91682fd4d8edc59c170f830498464953b2b8ba",
+    "release.log": "34c8c5eac0da8b978e15e16564c9812a2469ade48f2c7344d4d006a946a0c89c",
+    "static-checks.log": "d507fb269f59aabfce2e47c0376fbf88202c22b158920bcd8fa5c2001462c50f"
+  },
+  "counts": {
+    "launcher": 8,
+    "dependency": 12,
+    "canonical_tooling": 32,
+    "ctest": 6,
+    "tidy_translation_units": 4,
+    "staged_files": 8
+  },
+  "staged_files": [
+    "usr/include/holonight/search/index.h",
+    "usr/lib/cmake/HolonightSearch/HolonightSearchConfig.cmake",
+    "usr/lib/cmake/HolonightSearch/HolonightSearchConfigVersion.cmake",
+    "usr/lib/cmake/HolonightSearch/HolonightSearchTargets-release.cmake",
+    "usr/lib/cmake/HolonightSearch/HolonightSearchTargets.cmake",
+    "usr/lib/libholonight_search.a",
+    "usr/share/licenses/holonight-search/GPL-3.0-or-later.txt",
+    "usr/share/licenses/holonight-search/LICENSE"
+  ],
+  "implementation_sha256": {
+    ".clang-format": "b991ca75bf44dabc170e88b4f2cd7d1cf9da964779b235306189fe55e35d95a4",
+    ".clang-tidy": "1cfe7256c14a890c67b366f46eb67a4437ee0948e3d8cece5c2725ef5f9f4fb8",
+    ".clangd": "66f4e0808d6d184566ab049d24b967a8fccd27c28e6f3f36b7d44f20b7239a8b",
+    ".github/workflows/ci.yml": "640bc22fc2a9043d988f7975703022d9635f7627f2749a47f8acfc0d1c4369a6",
+    ".gitignore": "9b5339b88672399de115dd7eba61a6d8fd551f5ce294d8cbee14c7b7f52ac2c7",
+    ".serena/project.yml": "94bfcaad0a3c3f5009d4723e306462b448e3b1022565c56877d86ca7b6f4cfed",
+    "CMakeLists.txt": "89253743bff134275683faec636a0e220da00a14e2ee2719a78330b4e0ed0bed",
+    "CMakePresets.json": "35b9f47c5182dda1b971e83227e4697eaf4b4ecde42717cf6d3d50a6101fb662",
+    "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+    "LICENSES/GPL-3.0-or-later.txt": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+    "REUSE.toml": "1e32e6dbc0cf475588a13e82625f3796a0ff7aa6a057eef9b296c1b41dc099fe",
+    "Taskfile.yml": "4f1596c0fc49939e28c2de82c3d8443f729b498e61c491c3481aa463924133fc",
+    "cmake/HolonightSearchConfig.cmake.in": "c6abb1acc08068b3be7f8a939327402df51a2f7dcc2eded15df32a49c0558908",
+    "include/holonight/search/index.h": "f8bee311d79a0cf1979933efac45c9ad4c779f08cb1d2c7461ea38bd8f11cfa8",
+    "scripts/ci/compare-fzf.py": "8b86e995d65cfc93abe08e50d9d6345f960784117c56a9b879323a1160aee13a",
+    "scripts/ci/images.json": "971449c5da542cf20eb134eddf0abbbcdec1ea9f8d1edc517d980b21127aa5a7",
+    "scripts/ci/lane.sh": "937c9b2ec369068d2dcf233a2ccb7d3d588f573385110fdcffe91fc9525b353c",
+    "scripts/ci/packages.json": "b576e103f09918bc4ac912aba132be261fa4ca73af79da8504515db9ca98cad3",
+    "scripts/ci/run.py": "9073c491021f71c391a42cd2391a23e35109e53e727e0058fc332853e48e4b92",
+    "scripts/ci/test_dependencies.py": "c34f6bdc8a0424945e62b6954cca1103098cefe2bb3d5fe987dd86add1ff4b1a",
+    "scripts/ci/test_launcher.py": "3555dac2ef89c7cfa6efd866735743e81207c4d5d8a8ff56823c64679b7c62ea",
+    "src/index.cpp": "e6972ce99038a580be25b3cf366c388ff41475078eee3434dee4e6440ed7dbd1",
+    "tests/.clang-tidy": "bdf8f59f42ef23e0c0277847d491e00d3297be9629e7e65b20569b9b6d0121f9",
+    "tests/CMakeLists.txt": "f0bc0c8325eee9879478e69032cc246888b153f47ee9546f8ebd250b873c69dd",
+    "tests/benchmark.cpp": "f769979ffc6a834df19d202947d79a693526649a5738a22cfb09495d4c1e0080",
+    "tests/index_test.cpp": "1ccd1eebeb17420093ca217dc5b4d6d14a3084d48887783e73b5d7df47484c8d",
+    "tests/package-consumer/CMakeLists.txt": "8c3087438c520180e47173f1a2d71bed41dbc535a10b117eca5d197129dc7cad",
+    "tests/package-consumer/main.cpp": "b9b9950a0f7bbc77dac69632d5370fab237d0a679924d6d78ae2d104e3efa221",
+    "tooling/README.md": "884413a3d13d55a0e6b13f3748e2a9ca6d05626d65b96dbe45c1064fdcf398f7",
+    "tooling/VERSION": "c28fcca53637bc88e124af1725df13cb98c69dedefd62fb3cdbe1cdb6b760624",
+    "tooling/clang-format": "b991ca75bf44dabc170e88b4f2cd7d1cf9da964779b235306189fe55e35d95a4",
+    "tooling/clang-tidy-cpp": "635d244a257646d170c194322d4ba76c38e1f7f0b592673b47c6b5888c69f539",
+    "tooling/clang-tidy-qt": "1cfe7256c14a890c67b366f46eb67a4437ee0948e3d8cece5c2725ef5f9f4fb8",
+    "tooling/clang-tidy-tests": "bdf8f59f42ef23e0c0277847d491e00d3297be9629e7e65b20569b9b6d0121f9",
+    "tooling/clangd": "66f4e0808d6d184566ab049d24b967a8fccd27c28e6f3f36b7d44f20b7239a8b",
+    "tooling/compilation.py": "f28c63e566889f81d35b1bb25c9e05dc2771c5781eb17c73b824b4aff079c846",
+    "tooling/dependencies.cmake": "853f6e856c455657a9bf56fc111c29f68f458d6ecc674dabc8b015698b0c9b61",
+    "tooling/external-packages.json": "fbe02f85a17db3583b02fb48659ccfb54e77b0480f76eb23c4a425353cc350a3",
+    "tooling/external.py": "2e87dc012d7cdda7235d5ea2e311a2a49272ff82eac5cf3ccec7841ec610df27",
+    "tooling/module.json": "1f56568298cfe10781b7f33d2711b47c373a202e70fc035869b4b3dadfae41d6",
+    "tooling/providers.cmake": "5d6e7aae9f7f6874d9fa3cf5efca17cab8c3df88ea3b312633ece6341b592876",
+    "tooling/qml_policy.py": "b262e848d3b7fb3c7e6c63362a652b24957bf497ab901e5e2008352958ce6131",
+    "tooling/workflow.py": "6c9d0a80396e61072509437cd39168caf11ca31c8abd8259f50ce2c55434837e"
+  },
+  "benchmark": {
+    "provider_log": "records=2000000 index_ms=2300\nVmHWM:\t 1368604 kB\nVmRSS:\t 1368604 kB\nquery=lambda hits=80 p50_ms=4 p95_ms=4\nquery=lambda audit hits=80 p50_ms=4 p95_ms=5\nquery=audit lambda hits=80 p50_ms=4 p95_ms=4\nquery=document 42 hits=80 p50_ms=66 p95_ms=73\n",
+    "fzf": [
+      {
+        "query": "lambda",
+        "includes_candidate_ingestion": true,
+        "samples_ms": [
+          132.46473300023354,
+          129.58609700217494,
+          118.97712299833074,
+          140.4948690033052,
+          121.20224500176846,
+          125.0325220025843,
+          163.5226500002318,
+          104.80751699651591,
+          114.42859599992516,
+          124.2107770012808,
+          117.05515599896898,
+          112.76113699932466,
+          144.83951500005787,
+          192.94203400204424,
+          183.60471699998016,
+          186.45125300099608,
+          164.1125739988638,
+          187.14318300044397,
+          122.6603579998482,
+          118.5269200032053
+        ],
+        "p50_ms": 127.30930950237962,
+        "p95_ms": 187.14318300044397
+      },
+      {
+        "query": "lambda audit",
+        "includes_candidate_ingestion": true,
+        "samples_ms": [
+          133.89162800012855,
+          139.05331600108184,
+          147.743988000002,
+          112.1424869998009,
+          164.33728199990583,
+          126.58061399997678,
+          180.55525700037833,
+          162.67922000042745,
+          176.17015500218258,
+          112.90949300018838,
+          186.65589000011096,
+          177.86997399889515,
+          121.34140800117166,
+          188.50992300212965,
+          110.48595399915939,
+          135.80861399896094,
+          118.68399100058014,
+          121.16042700290564,
+          129.87133899878245,
+          148.5878249986854
+        ],
+        "p50_ms": 137.4309650000214,
+        "p95_ms": 186.65589000011096
+      },
+      {
+        "query": "audit lambda",
+        "includes_candidate_ingestion": true,
+        "samples_ms": [
+          143.13097699778154,
+          180.78069499824778,
+          174.2917720002879,
+          108.40729899791768,
+          114.47189500177046,
+          112.07412900330382,
+          167.16380099751404,
+          169.89138899953105,
+          189.03334999777144,
+          110.04770699946675,
+          181.9496310017712,
+          178.73309800052084,
+          174.91055099890218,
+          172.9923040002177,
+          181.65072799820337,
+          115.54452099881019,
+          113.63394100044388,
+          117.0505910013162,
+          178.22685599821853,
+          182.0833770034369
+        ],
+        "p50_ms": 171.44184649987437,
+        "p95_ms": 182.0833770034369
+      },
+      {
+        "query": "document 42",
+        "includes_candidate_ingestion": true,
+        "samples_ms": [
+          375.77593700189027,
+          386.0447330007446,
+          443.7900630000513,
+          439.171696001722,
+          452.96528799735825,
+          441.51183999929344,
+          434.2875719994481,
+          453.960377999465,
+          443.4920960011368,
+          381.811197999923,
+          443.53777099968283,
+          438.24246100120945,
+          465.9146630001487,
+          450.91413900081534,
+          386.35096899815835,
+          404.6864679985447,
+          391.95404700149084,
+          398.49601199966855,
+          399.4281380000757,
+          392.3836459980521
+        ],
+        "p50_ms": 436.2650165003288,
+        "p95_ms": 453.960377999465
+      },
+      {
+        "fzf_peak_rss_kib": 479828
+      }
+    ]
+  },
+  "deferred": [
+    "publication",
+    "umbrella pinning",
+    "real Podman execution",
+    "Debian qualification",
+    "downstream adoption",
+    "ecosystem integration"
+  ],
+  "documentation_licensing": {
+    "run": "build/ci/20261013T135726Z-8a8npoly",
+    "exit_code": 0,
+    "log_sha256": "107ac9b8d187523ff85caa6631c8157d858c112c307fbf45f7e299cd3e538db7"
+  }
+}

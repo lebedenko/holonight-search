@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 project(holonight-search VERSION 0.1.0 LANGUAGES CXX)
 
+include(tooling/dependencies.cmake)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 find_package(Qt6 6.11 REQUIRED COMPONENTS Core)
@@ -30,6 +31,6 @@ install(FILES LICENSE LICENSES/GPL-3.0-or-later.txt DESTINATION ${CMAKE_INSTALL_
 
 include(CTest)
 if(BUILD_TESTING)
-  find_package(GTest CONFIG REQUIRED)
+  find_package(GTest 1.14 CONFIG REQUIRED)
   add_subdirectory(tests)
 endif()

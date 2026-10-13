@@ -4,6 +4,10 @@ tasks:
     desc: Rehearse all push validation in isolated containers
     cmds:
     - python3 scripts/ci/run.py
+  ci:prepare:
+    desc: Explicitly prepare qualified CI images and prerequisite evidence
+    cmds:
+    - python3 scripts/ci/run.py --prepare
   tooling:doctor:
     desc: doctor using standalone tooling
     cmds:

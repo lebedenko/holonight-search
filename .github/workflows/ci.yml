@@ -3,13 +3,20 @@ on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
 jobs:
-  build:
+  acceptance:
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        lane: [build-test, benchmark, release, static-checks, licensing]
     steps:
       - uses: actions/checkout@v4
-      - run: python3 scripts/ci/run.py --lane build-test
-  benchmark:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - run: python3 scripts/ci/run.py --lane benchmark
+      - run: python3 scripts/ci/run.py --prepare
+      - run: python3 scripts/ci/run.py --lane ${{ matrix.lane }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: search-${{ matrix.lane }}-evidence
+          path: |
+            build/ci/
+            build/ci-prepared/

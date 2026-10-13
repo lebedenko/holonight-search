@@ -22,18 +22,32 @@ See [tooling/README.md](tooling/README.md) for presets, local dependency overrid
 
 ## Local CI rehearsal
 
-Run `task ci` with Git, Python 3, Task and an accessible Docker daemon; Podman is
-used when Docker is absent. The pinned linux/amd64 image needs an amd64 host or
-emulation, registry access, and Arch archive access for checksum-pinned fzf 0.74.4.
-Local and hosted CI share isolated Debug provider/installed-consumer checks and a
-Release two-million-path benchmark with the existing four queries and 20 samples.
-fzf filter timings include candidate ingestion; provider timings measure warm queries.
-Memory and indexing measurements remain separate from query measurements.
+Run `task ci:prepare` explicitly to acquire the two qualified linux/amd64 images and
+record installed prerequisite evidence, then run `task ci`. Docker must be accessible;
+Podman is used when Docker is absent. Preparation needs registry access. Acceptance uses
+cached images with `--pull=never --network=none`, caller UID/GID, read-only snapshots,
+private runtime directories and two build jobs by default (`JOBS` overrides this).
 
-Tracked edits and non-ignored new files enter read-only snapshots; untracked inputs
-are reported to add before pushing. Every lane uses a disposable writable copy and
-fresh build tree. Existing development builds stay untouched; only container layers
-may be reused. Complete logs, revision/dirty state, image identity, tool versions
-and results go to ignored `build/ci/`. Required failures return nonzero and print
-complete failure logs. Run launcher regressions with `python3 scripts/ci/test_launcher.py`.
-Publication, releases and artifact uploads remain remote operations.
+Search has no internal source providers. `task deps PRESET=test` validates installed
+Qt Core >=6.11, GTest >=1.14 CONFIG and fzf, and records prerequisite evidence;
+`task deps` with the debug/release preset excludes test prerequisites. Ordinary
+configure/build/test commands only validate and never acquire packages or prepare sources.
+Use `HOLONIGHT_EXTERNAL_PREFIX` for external installations, including paths with spaces;
+compatible caches are reused and incompatible trees are preserved as `.previous-N`.
+
+Five lanes cover Debug provider tests and an installed consumer, the Release benchmark,
+Release staging and an installed consumer, canonical format/strict tidy across all four
+owned C++ units, and REUSE. The benchmark preserves two million paths, four queries,
+80 provider hits and 20 samples per query. fzf is installed in the qualified image;
+its ingestion/filter timings differ from warm provider queries. No performance threshold
+is imposed. Historical fzf package identity remains in `scripts/ci/packages.json`.
+
+Tracked edits and non-ignored new files enter snapshots, including executable modes and
+symlinks; deleted and ignored files are omitted. Every lane uses a fresh build tree.
+Logs and exported results live in ignored `build/ci/`; prepared versions, package list,
+external discovery and a hash-validated manifest live in `build/ci-prepared/`. Missing,
+stale or tampered evidence rejects acceptance before containers start. Rerun preparation
+when its inputs change; incompatible evidence is archived as `ci-prepared.previous-N`.
+Run focused regressions with `python3 scripts/ci/test_launcher.py` and
+`python3 scripts/ci/test_dependencies.py`. Exact identities and acceptance evidence are in
+[the local SPEC](docs/sdd/external-dependency-management/SPEC.md).
