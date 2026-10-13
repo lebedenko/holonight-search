@@ -7,6 +7,7 @@
 #include <holonight/search/index.h>
 #include <limits>
 #include <thread>
+#include <utility>
 
 namespace HolonightSearch {
 namespace {
@@ -58,16 +59,18 @@ struct Match {
 
 // Dynamic programming retains the best predecessor for each character. The
 // score pass avoids position storage; only selected results reconstruct it.
+// Preserve the established dynamic-programming scoring and tie order.
+// NOLINTNEXTLINE(readability-function-cognitive-complexity)
 Match matchTerm(const Term& term, const QString& original, const QString& folded, bool caseSensitive,
                 bool positionsNeeded) {
   if (term.text.size() > original.size()) {
     return {};
   }
   const QString& haystack = caseSensitive ? original : folded;
-  const int width = haystack.size();
+  const int width = static_cast<int>(haystack.size());
   // A boundary-aligned contiguous match already receives the strongest local
   // bonuses. Handle this common case without allocating DP rows for every hit.
-  int contiguous = haystack.indexOf(term.text);
+  const int contiguous = static_cast<int>(haystack.indexOf(term.text));
   if (contiguous >= 0 && boundary(original, contiguous)) {
     Match direct;
     direct.score = 16 + 12 - contiguous;
@@ -84,22 +87,23 @@ Match matchTerm(const Term& term, const QString& original, const QString& folded
     return direct;
   }
   constexpr int impossible = std::numeric_limits<int>::min() / 4;
-  QVector<int> previous(width, impossible), current(width, impossible);
+  QVector<int> previous(width, impossible);
+  QVector<int> current(width, impossible);
   QVector<QVector<int>> parents;
   if (positionsNeeded) {
     parents.resize(term.text.size());
   }
   for (int i = 0; i < term.text.size(); ++i) {
-    std::fill(current.begin(), current.end(), impossible);
+    std::ranges::fill(current, impossible);
     if (positionsNeeded) {
       parents[i].resize(width);
-      std::fill(parents[i].begin(), parents[i].end(), -1);
+      std::ranges::fill(parents[i], -1);
     }
     int bestGapScore = impossible;
     int bestGapPosition = -1;
     for (int j = i; j < width; ++j) {
       if (i > 0 && previous[j - 1] != impossible) {
-        const int value = previous[j - 1] + (j - 1) * 2;
+        const int value = previous[j - 1] + ((j - 1) * 2);
         if (value > bestGapScore) {
           bestGapScore = value;
           bestGapPosition = j - 1;
@@ -116,7 +120,7 @@ Match matchTerm(const Term& term, const QString& original, const QString& folded
       if (bestGapPosition < 0) {
         continue;
       }
-      int score = bestGapScore + 16 + bonus - (j - 1) * 2;
+      int score = bestGapScore + 16 + bonus - ((j - 1) * 2);
       int parent = bestGapPosition;
       if (previous[j - 1] != impossible) {
         const int consecutive = previous[j - 1] + 28 + bonus;
@@ -132,7 +136,7 @@ Match matchTerm(const Term& term, const QString& original, const QString& folded
     }
     previous.swap(current);
   }
-  const auto best = std::max_element(previous.cbegin(), previous.cend());
+  const auto best = std::ranges::max_element(std::as_const(previous));
   if (best == previous.cend() || *best == impossible) {
     return {};
   }
@@ -141,7 +145,7 @@ Match matchTerm(const Term& term, const QString& original, const QString& folded
   if (positionsNeeded) {
     int position = static_cast<int>(best - previous.cbegin());
     result.positions.resize(term.text.size());
-    for (int i = term.text.size() - 1; i >= 0; --i) {
+    for (int i = static_cast<int>(term.text.size()) - 1; i >= 0; --i) {
       result.positions[i] = position;
       position = parents[i][position];
     }
@@ -173,8 +177,8 @@ void Index::replace(const QString& source, QVector<Record> records) {
       IndexedField indexed;
       indexed.value = std::move(field);
       indexed.folded = fold(indexed.value.text);
-      indexed.characterMask = characterMask(indexed.folded);
-      entry.characterMask |= indexed.characterMask;
+      indexed.character_mask = characterMask(indexed.folded);
+      entry.character_mask |= indexed.character_mask;
       entry.fields.append(std::move(indexed));
     }
     batch->append(std::move(entry));
@@ -198,8 +202,8 @@ void Index::append(const QString& source, QVector<Record> records) {
       IndexedField indexed;
       indexed.value = std::move(field);
       indexed.folded = fold(indexed.value.text);
-      indexed.characterMask = characterMask(indexed.folded);
-      entry.characterMask |= indexed.characterMask;
+      indexed.character_mask = characterMask(indexed.folded);
+      entry.character_mask |= indexed.character_mask;
       entry.fields.append(std::move(indexed));
     }
     batch->append(std::move(entry));
@@ -224,15 +228,17 @@ qsizetype Index::size() const {
   return count;
 }
 
+// Keep ranking, cancellation and bounded highlight reconstruction in their established order.
+// NOLINTNEXTLINE(readability-function-cognitive-complexity)
 QVector<Result> Index::search(const QString& query, Options options) const {
   if (options.limit <= 0 || query.trimmed().isEmpty()) {
     return {};
   }
-  const bool caseSensitive = std::any_of(query.cbegin(), query.cend(), [](QChar c) { return c.isUpper(); });
+  const bool caseSensitive = std::ranges::any_of(query, [](QChar character) { return character.isUpper(); });
   QVector<Term> terms;
   for (const QString& part : query.split(QRegularExpression(QStringLiteral("\\s+")), Qt::SkipEmptyParts)) {
     const QString text = caseSensitive ? part : fold(part);
-    terms.append({text, characterMask(text)});
+    terms.append({.text = text, .mask = characterMask(text)});
   }
   QHash<QString, QVector<std::shared_ptr<const Batch>>> snapshot;
   {
@@ -254,22 +260,24 @@ QVector<Result> Index::search(const QString& query, Options options) const {
       continue;
     }
     for (const auto& batch : source.value()) {
-      groups.append({source.key(), batch});
+      groups.append({.source = source.key(), .batch = batch});
     }
   }
   const int workers = groups.size() < 16 ? 1 : std::min(8, static_cast<int>(groups.size()));
   QVector<QVector<Ranked>> partial(workers);
+  // The worker retains the established scoring loop and bounded heap ordering.
+  // NOLINTNEXTLINE(readability-function-cognitive-complexity)
   auto searchGroups = [&](int worker) {
     std::priority_queue<Ranked, std::vector<Ranked>, decltype(rankedBetter)> best(rankedBetter);
     for (int groupIndex = worker; groupIndex < groups.size(); groupIndex += workers) {
       const auto& [source, batch] = groups[groupIndex];
       for (const IndexedRecord& record : *batch) {
-        if (options.cancelled && options.cancelled->load(std::memory_order_relaxed)) {
+        if (options.cancelled != nullptr && options.cancelled->load(std::memory_order_relaxed)) {
           return;
         }
         bool possible = true;
         for (const Term& term : terms) {
-          if ((record.characterMask & term.mask) != term.mask) {
+          if ((record.character_mask & term.mask) != term.mask) {
             possible = false;
             break;
           }
@@ -281,7 +289,7 @@ QVector<Result> Index::search(const QString& query, Options options) const {
         for (const Term& term : terms) {
           int bestField = std::numeric_limits<int>::min();
           for (const IndexedField& field : record.fields) {
-            if ((field.characterMask & term.mask) != term.mask) {
+            if ((field.character_mask & term.mask) != term.mask) {
               continue;
             }
             const Match match = matchTerm(term, field.value.text, field.folded, caseSensitive, false);
@@ -291,7 +299,7 @@ QVector<Result> Index::search(const QString& query, Options options) const {
             const int pathBonus =
                 options.profile == Profile::Path && field.value.name == QStringLiteral("name") ? 60 : 0;
             bestField = std::max(bestField, match.score + field.value.weight + pathBonus);
-            if (pathBonus) {
+            if (pathBonus != 0) {
               break;  // A filename hit wins this term in the path profile.
             }
           }
@@ -304,7 +312,8 @@ QVector<Result> Index::search(const QString& query, Options options) const {
         if (!possible) {
           continue;
         }
-        Ranked result{{source, record.id, score, {}}, &record};
+        Ranked result{.result = {.source = source, .id = record.id, .score = score, .highlights = {}},
+                      .record = &record};
         if (best.size() < static_cast<size_t>(options.limit)) {
           best.push(std::move(result));
         } else if (better(result.result, best.top().result)) {
@@ -314,7 +323,7 @@ QVector<Result> Index::search(const QString& query, Options options) const {
       }
     }
     auto& output = partial[worker];
-    output.reserve(best.size());
+    output.reserve(static_cast<qsizetype>(best.size()));
     while (!best.empty()) {
       output.append(best.top());
       best.pop();
@@ -328,7 +337,7 @@ QVector<Result> Index::search(const QString& query, Options options) const {
   for (auto& thread : threads) {
     thread.join();
   }
-  if (options.cancelled && options.cancelled->load(std::memory_order_relaxed)) {
+  if (options.cancelled != nullptr && options.cancelled->load(std::memory_order_relaxed)) {
     return {};
   }
   std::priority_queue<Ranked, std::vector<Ranked>, decltype(rankedBetter)> best(rankedBetter);
@@ -343,12 +352,12 @@ QVector<Result> Index::search(const QString& query, Options options) const {
     }
   }
   QVector<Ranked> selected;
-  selected.reserve(best.size());
+  selected.reserve(static_cast<qsizetype>(best.size()));
   while (!best.empty()) {
     selected.append(best.top());
     best.pop();
   }
-  std::sort(selected.begin(), selected.end(), rankedBetter);
+  std::ranges::sort(selected, rankedBetter);
   QVector<Result> results;
   results.reserve(selected.size());
   // Highlight positions are computed only for the bounded result set.
@@ -368,21 +377,21 @@ QVector<Result> Index::search(const QString& query, Options options) const {
           bestName = field.value.name;
           positions = match.positions;
         }
-        if (pathBonus && match.score != std::numeric_limits<int>::min()) {
+        if (pathBonus != 0 && match.score != std::numeric_limits<int>::min()) {
           break;
         }
       }
-      auto existing = std::find_if(result.highlights.begin(), result.highlights.end(),
-                                   [&](const Highlight& h) { return h.field == bestName; });
+      auto existing = std::ranges::find_if(result.highlights,
+                                           [&](const Highlight& highlight) { return highlight.field == bestName; });
       if (existing == result.highlights.end()) {
-        result.highlights.append({bestName, positions});
+        result.highlights.append({.field = bestName, .positions = positions});
       } else {
         existing->positions += positions;
       }
     }
     results.append(std::move(result));
   }
-  if (options.cancelled && options.cancelled->load(std::memory_order_relaxed)) {
+  if (options.cancelled != nullptr && options.cancelled->load(std::memory_order_relaxed)) {
     return {};
   }
   return results;

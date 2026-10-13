@@ -5,12 +5,14 @@
 #include <algorithm>
 #include <holonight/search/index.h>
 #include <iostream>
+#include <span>
 
 using namespace HolonightSearch;
 
 int main(int argc, char** argv) {
-  const int count = argc > 1 ? QByteArray(argv[1]).toInt() : 2'000'000;
-  const QString listPath = argc > 2 ? QString::fromLocal8Bit(argv[2]) : QString{};
+  const std::span<char*> arguments(argv, static_cast<size_t>(argc));
+  const int count = argc > 1 ? QByteArray(arguments[1]).toInt() : 2'000'000;
+  const QString listPath = argc > 2 ? QString::fromLocal8Bit(arguments[2]) : QString{};
   QFile list(listPath);
   if (!listPath.isEmpty() && !list.open(QIODevice::WriteOnly | QIODevice::Text)) {
     return 1;
@@ -30,7 +32,9 @@ int main(int argc, char** argv) {
     if (list.isOpen()) {
       stream << path << '\n';
     }
-    batch.append({path, {{"name", name, 0}, {"path", path, 0}}, 0});
+    batch.append({.id = path,
+                  .fields = {{.name = "name", .text = name, .weight = 0}, {.name = "path", .text = path, .weight = 0}},
+                  .boost = 0});
     if (batch.size() == batchSize) {
       index.append("files", std::move(batch));
       batch.clear();
@@ -48,8 +52,12 @@ int main(int argc, char** argv) {
       }
     }
   }
-  for (const QString& query : {QStringLiteral("lambda"), QStringLiteral("lambda audit"), QStringLiteral("audit lambda"),
-                               QStringLiteral("document 42")}) {
+  for (const QString& query : {
+           QStringLiteral("lambda"),
+           QStringLiteral("lambda audit"),
+           QStringLiteral("audit lambda"),
+           QStringLiteral("document 42"),
+       }) {
     QVector<qint64> durations;
     for (int sample = 0; sample < 20; ++sample) {
       timer.restart();
@@ -59,7 +67,7 @@ int main(int argc, char** argv) {
         std::cout << "query=" << query.toStdString() << " hits=" << hits.size() << ' ';
       }
     }
-    std::sort(durations.begin(), durations.end());
+    std::ranges::sort(durations);
     std::cout << "p50_ms=" << durations[durations.size() / 2] << " p95_ms=" << durations[18] << '\n';
   }
 }

@@ -23,6 +23,8 @@ struct Record {
   int boost = 0;
 };
 
+// Preserve the public enum representation.
+// NOLINTNEXTLINE(performance-enum-size)
 enum class Profile { General, Path };
 
 struct Options {
@@ -58,13 +60,13 @@ class Index {
   struct IndexedField {
     Field value;
     QString folded;
-    quint64 characterMask = 0;
+    quint64 character_mask = 0;
   };
   struct IndexedRecord {
     QString id;
     QVarLengthArray<IndexedField, 2> fields;
     int boost = 0;
-    quint64 characterMask = 0;
+    quint64 character_mask = 0;
   };
   using Batch = QVector<IndexedRecord>;
   QHash<QString, QVector<std::shared_ptr<const Batch>>> sources_;
