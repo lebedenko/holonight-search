@@ -6,7 +6,7 @@ mkdir -p /work/output
     cmake --install build/release --prefix '/work/external prefix'
     cmake -S tests/package-consumer -B '/work/consumer build' -G Ninja \
       -DCMAKE_BUILD_TYPE=Release '-DCMAKE_PREFIX_PATH=/work/external prefix'
-    cmake --build '/work/consumer build' --parallel "${JOBS:-2}"
+    cmake --build '/work/consumer build' --parallel "${JOBS:-$(nproc)}"
     '/work/consumer build/search-consumer'
     python3 - <<'CHECK'
 from pathlib import Path
@@ -18,7 +18,7 @@ CHECK
     cp -a /work/package /work/output/
 
     cmake -S . -B build/benchmark -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
-    cmake --build build/benchmark --parallel "${JOBS:-2}"
+    cmake --build build/benchmark --parallel "${JOBS:-$(nproc)}"
     export FZF_DEFAULT_OPTS= FZF_DEFAULT_COMMAND=
     fzf --version
     mkdir /work/benchmark
