@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 project(holonight-search VERSION 0.1.0 LANGUAGES CXX)
 
-include(tooling/dependencies.cmake)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 find_package(Qt6 6.11 REQUIRED COMPONENTS Core)

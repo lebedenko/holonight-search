@@ -8,3 +8,6 @@
 /build/
 /__pycache__/
 /tooling/__pycache__/
+
+# Generated Python bytecode.
+__pycache__/

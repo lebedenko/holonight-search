@@ -1,8 +1,0 @@
-[
-  {
-    "name": "fzf",
-    "version": "0.74.4-1",
-    "sha256": "061593421be4b2dfc769f077f3f906e01708347841ccbfdf7f97270b5408886d",
-    "url": "https://archive.archlinux.org/packages/f/fzf/fzf-0.74.4-1-x86_64.pkg.tar.zst"
-  }
-]
