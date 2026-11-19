@@ -32,9 +32,11 @@ int main(int argc, char** argv) {
     if (list.isOpen()) {
       stream << path << '\n';
     }
-    batch.append({.id = path,
-                  .fields = {{.name = "name", .text = name, .weight = 0}, {.name = "path", .text = path, .weight = 0}},
-                  .boost = 0});
+    batch.append({
+        .id = path,
+        .fields = {{.name = "name", .text = name, .weight = 0}, {.name = "path", .text = path, .weight = 0}},
+        .boost = 0,
+    });
     if (batch.size() == batchSize) {
       index.append("files", std::move(batch));
       batch.clear();

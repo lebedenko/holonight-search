@@ -312,8 +312,10 @@ QVector<Result> Index::search(const QString& query, Options options) const {
         if (!possible) {
           continue;
         }
-        Ranked result{.result = {.source = source, .id = record.id, .score = score, .highlights = {}},
-                      .record = &record};
+        Ranked result{
+            .result = {.source = source, .id = record.id, .score = score, .highlights = {}},
+            .record = &record,
+        };
         if (best.size() < static_cast<size_t>(options.limit)) {
           best.push(std::move(result));
         } else if (better(result.result, best.top().result)) {
